@@ -87,6 +87,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://django-celery-email-project-production.up.railway.app",
 ]
 
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+
 
 
 
