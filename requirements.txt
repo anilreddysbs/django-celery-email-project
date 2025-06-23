@@ -1,0 +1,8 @@
+Django>=4.0
+celery>=5.2
+redis
+flower
+django-celery-beat
+dotenv
+gunicorn
+

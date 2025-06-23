@@ -1,0 +1,59 @@
+services:
+  redis:
+    image: redis:7
+    container_name: async_email_project-redis
+
+  web:
+    build:
+      context: .
+    container_name: async_email_project-web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+
+  celery:
+    build:
+      context: .
+    container_name: async_email_project-celery
+    command: celery -A async_email_project worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+    env_file:
+      - .env
+
+
+  flower:
+    build:
+      context: .
+    container_name: async_email_project-flower
+    command: celery -A async_email_project flower --port=5555
+    ports:
+      - "5555:5555"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+
+  celery-beat:
+    build:
+      context: .
+    container_name: async_email_project-celery-beat
+    command: celery -A async_email_project beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+    env_file:
+    - .env
