@@ -66,7 +66,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+import os
+CELERY_BROKER_URL = os.environ.get('REDIS_URL')
+
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
@@ -87,7 +89,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://django-celery-email-project-production.up.railway.app",
 ]
 
-CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 
 
